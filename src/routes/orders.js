@@ -23,6 +23,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+// 🔹 Izmena porudžbine po ID-u
+router.put('/:id', async (req, res) => {
+  try {
+    const updated = await Order.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true } // vraća novi dokument i validira unos
+    );
+
+    if (!updated) return res.status(404).json({ error: 'Nema takve porudžbine' });
+    res.json({ message: 'Porudžbina izmenjena ✅', order: updated });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
 // Brisanje porudžbine po ID-u
 router.delete('/:id', async (req, res) => {
   try {
