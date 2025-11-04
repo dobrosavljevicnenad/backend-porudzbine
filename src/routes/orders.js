@@ -1,12 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
+const Stock = require('../models/Stock');
 
 // Kreiranje nove porudžbine
 router.post('/', async (req, res) => {
   try {
     const order = new Order(req.body);
     await order.save();
+    
+    const stock = await Stock.findOne();
+    const quantity = Number(order.quantity) || 0;
+
+    stock.availableBoards -= quantity;
+    stock.updatedAt = new Date();
+    await stock.save();
+
     res.status(201).json(order);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -47,6 +56,16 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'Porudžbina obrisana ✅' });
   } catch (error) {
     res.status(400).json({ error: 'Nevažeći ID' });
+  }
+});
+
+router.get('/stock', async (req, res) => {
+  try {
+    const stock = await Stock.findOne();
+    if (!stock) return res.status(404).json({ error: 'Stanje nije pronađeno' });
+    res.json(stock);
+  } catch (error) {
+    res.status(500).json({ error: 'Greška servera' });
   }
 });
 

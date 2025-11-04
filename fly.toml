@@ -1,4 +1,4 @@
-app = "backend-maskezaklimu"
+app = "backend-porudzbine-vegnoa"
 
 [build]
   dockerfile = "Dockerfile"
@@ -6,13 +6,14 @@ app = "backend-maskezaklimu"
 [env]
   PORT = "3000"
 
-[deploy]
-  # Region for your app
-  region = "buc"
-
 [[services]]
   internal_port = 3000
   protocol = "tcp"
+
+  # 🔹 Ovo dodajemo da omogući automatsko spavanje i buđenje
+  auto_stop_machines = true       # zaustavi kad nema saobraćaja
+  auto_start_machines = true      # probudi kad neko pošalje zahtev
+  min_machines_running = 0        # dozvoli da nema nijedna aktivna mašina
 
   [[services.ports]]
     handlers = ["http"]
