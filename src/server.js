@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const ordersRouter = require('./routes/orders');
 const investmentsRouter = require('./routes/investments');
+const chatRouter = require('./routes/chat'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,8 @@ app.use(express.json());
 // Routes
 app.use('/api/orders', ordersRouter);
 app.use('/api/investments', investmentsRouter);
+app.use('/api/chat', chatRouter);
+
 
 // Default route
 app.get('/', (req, res) => {
